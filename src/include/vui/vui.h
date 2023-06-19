@@ -6,6 +6,7 @@
 namespace vui {
 
     using DrawUI = std::function<void()>;
+    using cleanupFunc = std::function<void()>;
 
     struct config{
         unsigned int width;
@@ -13,7 +14,7 @@ namespace vui {
         std::string title;
     };
 
-    void show(const config& config, DrawUI&& drawUi);
+    void show(const config& config, DrawUI&& drawUi, cleanupFunc&& cleanupFunc = []{});
 
     void stop();
 

@@ -50,6 +50,7 @@ static bool                     g_SwapChainRebuild = false;
 static std::thread              g_vui_thread;
 static std::atomic_bool                     g_vui_is_running = false;
 static GLFWwindow*              g_window = nullptr;
+static vui::cleanupFunc cleanup = []{};
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -389,11 +390,12 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
 
 namespace vui {
 
-    void show(const config& config, DrawUI&& drawUi){
+    void show(const config& config, DrawUI&& drawUi, cleanupFunc&& cleanupFunc){
         if(g_vui_is_running){
             std::printf("view is already running");
             return;
         }
+        cleanup = std::move(cleanupFunc);
         std::thread main_thread{[config, drawUi]{
             glfwSetErrorCallback(glfw_error_callback);
             if (!glfwInit())
@@ -586,6 +588,7 @@ namespace vui {
             return;
         }
         glfwSetWindowShouldClose(g_window, GLFW_TRUE);
+        cleanup();
         wait();
     }
 
