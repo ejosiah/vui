@@ -575,12 +575,7 @@ namespace vui {
     }
 
     void wait(){
-        if(!g_vui_is_running){
-            std::printf("vui is not running");
-            return;
-        }
         g_vui_thread.join();
-        g_window = nullptr;
     }
 
     void stop(){
