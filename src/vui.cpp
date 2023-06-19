@@ -554,6 +554,7 @@ namespace vui {
             }
 
             // Cleanup
+            g_vui_is_running = false;
             cleanup();
             err = vkDeviceWaitIdle(g_Device);
             check_vk_result(err);
@@ -568,7 +569,6 @@ namespace vui {
 
             glfwDestroyWindow(window);
             glfwTerminate();
-            g_vui_is_running = false;
         }};
         g_vui_thread = std::move(main_thread);
         g_vui_is_running = true;
