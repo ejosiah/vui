@@ -19,4 +19,6 @@ namespace vui {
 
     void wait();
 
+    bool isRunning();
+
 }

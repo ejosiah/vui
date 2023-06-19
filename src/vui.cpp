@@ -19,6 +19,7 @@
 #include <cstdio>          // printf, fprintf
 #include <cstdlib>         // abort
 #include <thread>
+#include <atomic>
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -47,7 +48,7 @@ static ImGui_ImplVulkanH_Window g_MainWindowData;
 static int                      g_MinImageCount = 2;
 static bool                     g_SwapChainRebuild = false;
 static std::thread              g_vui_thread;
-static bool                     g_vui_is_running = false;
+static std::atomic_bool                     g_vui_is_running = false;
 static GLFWwindow*              g_window = nullptr;
 
 static void glfw_error_callback(int error, const char* description)
@@ -586,5 +587,9 @@ namespace vui {
         }
         glfwSetWindowShouldClose(g_window, GLFW_TRUE);
         wait();
+    }
+
+    bool isRunning() {
+        return g_vui_is_running;
     }
 }
