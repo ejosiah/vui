@@ -554,6 +554,7 @@ namespace vui {
             }
 
             // Cleanup
+            cleanup();
             err = vkDeviceWaitIdle(g_Device);
             check_vk_result(err);
             ImGui_ImplVulkan_Shutdown();
@@ -588,7 +589,6 @@ namespace vui {
             return;
         }
         glfwSetWindowShouldClose(g_window, GLFW_TRUE);
-        cleanup();
         wait();
     }
 
