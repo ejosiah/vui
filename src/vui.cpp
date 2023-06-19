@@ -568,6 +568,7 @@ namespace vui {
 
             glfwDestroyWindow(window);
             glfwTerminate();
+            g_vui_is_running = false;
         }};
         g_vui_thread = std::move(main_thread);
         g_vui_is_running = true;
@@ -580,7 +581,6 @@ namespace vui {
         }
         g_vui_thread.join();
         g_window = nullptr;
-        g_vui_is_running = false;
     }
 
     void stop(){
