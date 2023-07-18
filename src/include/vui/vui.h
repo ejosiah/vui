@@ -22,4 +22,5 @@ namespace vui {
 
     bool isRunning();
 
+    void frameRate(int);
 }

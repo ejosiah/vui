@@ -26,6 +26,9 @@
 #include <vulkan/vulkan.h>
 //#include <vulkan/vulkan_beta.h>
 
+#include <iostream>
+#include <chrono>
+#include <thread>
 
 
 //#define IMGUI_UNLIMITED_FRAME_RATE
@@ -51,6 +54,8 @@ static std::thread              g_vui_thread;
 static std::atomic_bool                     g_vui_is_running = false;
 static GLFWwindow*              g_window = nullptr;
 static vui::cleanupFunc cleanup = []{};
+static int g_frame_rate = -1;
+static std::chrono::milliseconds g_frame_length;
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -507,6 +512,8 @@ namespace vui {
 
             ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+            static auto now = std::chrono::steady_clock::now();
+
             // Main loop
             while (!glfwWindowShouldClose(window))
             {
@@ -551,6 +558,14 @@ namespace vui {
                     FrameRender(wd, draw_data);
                     FramePresent(wd);
                 }
+                if(g_frame_rate > 0){
+                    std::chrono::milliseconds duration;
+                    auto start = std::chrono::steady_clock::now();
+                    do{
+                        duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start);
+                    }while(duration < g_frame_length);
+                    std::cout << duration.count() << "\n";
+                }
             }
 
             // Cleanup
@@ -589,5 +604,10 @@ namespace vui {
 
     bool isRunning() {
         return g_vui_is_running;
+    }
+
+    void frameRate(int value) {
+        g_frame_rate = value;
+        g_frame_length = std::chrono::milliseconds(static_cast<long long>(1000/g_frame_rate));
     }
 }
